@@ -63,7 +63,7 @@ function alertTheTavern(msg) {
     GM_xmlhttpRequest({
         method: "POST",
         url: "http://chat.meta.stackoverflow.com/chats/89/messages/new",
-        data: "text=" + encodeURIComponent('[SE-spam-detector-izer] ' + msg) + "&fkey=" + fkey,
+        data: "text=" + encodeURIComponent('[SE-spam-detector-izer-er] ' + msg) + "&fkey=" + fkey,
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
 }
