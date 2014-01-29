@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name       Spam-detector-izer for SE
+// @name       Spam-detector-izer-er for SE
 // @version    1.0
-// @description  Does stuff
+// @namespace  https://github.com/OddLlama/SE-spam-detector-izer-er
+// @description  Detects spam
 // @match      *stackexchange.com/questions?tab=realtime
-// @copyright  2012+, You
+// @copyright  MIT License
 // ==/UserScript==
 
 /*
