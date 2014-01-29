@@ -3,7 +3,7 @@
 // @version    0.1
 // @description  Does stuff
 // @match      *stackexchange.com/questions?tab=realtime
-// @copyright  MIT License
+// @copyright  2012+, You
 // ==/UserScript==
 
 /*
@@ -18,8 +18,12 @@ c=true
 // in the console of the Tavern page.
 fkey="6be2d79ba9e6e175facf8786949d8874" // this is only an example (it was mine, once)
 
-// This is the current spam-detector regex:
-r=/<h2>[\s\S]*?\b(?:\d{10}|vashikaran|baba)\b[\s\S]*?<\/h2>/i
+// These are the current spam-detector conditions:
+r={
+    'SPAM - Bad keyword': function(el, qTitle) { return /\b(?:\d{10}|vashikaran|baba)\b/i.test(qTitle) },
+    'SPAM - No spaces in title': function(el, qTitle) { return /^[^ ]+$/.test(qTitle) },
+    'Allcaps title': function(el, qTitle) { return qTitle.toUpperCase() === qTitle }
+}
 
 // This used to be minified, so I jsbeauttifier-ed it. Will work on more readability later. (I lost the dev version)
 s = document.createElement('style');
@@ -34,12 +38,14 @@ document.body.appendChild(u);
 (new(MutationObserver || WebKitMutationObserver)(function (m) {
     m.forEach(function (l) {
         for (i = 0; i < l.addedNodes.length; i++) {
-            n = l.addedNodes[i], h = n.innerHTML;
-            if (r.test(h)) {
-                u.play();
-                document.title = '### SPAM FOUND ###';
-                n.style.backgroundColor = '#FAA';
-                alertTheTavern(n.getElementsByTagName('a')[0].href + ' (' + n.getElementsByTagName('h2')[0].innerText + ')')
+            n = l.addedNodes[i], qTitle = n.getElementsByTagName('h2')[0].getElementsByTagName('a')[0].innerText;
+            for (var str in r) {
+                if (r[str](n, qTitle)) {
+                    u.play();
+                    document.title = '### SPAM FOUND ###';
+                    n.style.backgroundColor = '#FAA';
+                    alertTheTavern(str + ': ' + n.getElementsByTagName('a')[0].href + ' (' + n.getElementsByTagName('h2')[0].innerText + ')')
+                }
             }
         }
     })
@@ -56,7 +62,7 @@ function alertTheTavern(msg) {
     GM_xmlhttpRequest({
         method: "POST",
         url: "http://chat.meta.stackoverflow.com/chats/89/messages/new",
-        data: "text=" + encodeURIComponent("SPAM: " + msg) + "&fkey=" + fkey,
+        data: "text=" + encodeURIComponent(msg) + "&fkey=" + fkey,
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
     })
 }
