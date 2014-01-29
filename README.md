@@ -1,5 +1,5 @@
-stackexchange-spam-detector
-===========================
+SE-spam-detector-izer-er
+========================
 
 Detects spam across the Stack Exchange network immediately as it's posted.
 
